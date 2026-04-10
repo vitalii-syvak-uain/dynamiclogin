@@ -7,6 +7,7 @@
   .container { background: white; padding: 30px; max-width: 400px; margin: auto; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
   input, button { padding: 10px; margin: 8px 0; width: 100%; box-sizing: border-box; }
   button { background: #0066cc; color: white; border: none; cursor: pointer; }
+  label { display: block; margin-top: 10px; font-weight: bold; }
   .msg { margin-top: 15px; padding: 10px; background: #e8f5e9; display: none; }
 </style>
 </head>
@@ -15,57 +16,49 @@
 
 <script>
 const variants = [
-  {
-    title: "Sign In",
-    userLabel: "Username",
-    passLabel: "Password",
-    btnText: "Login",
-    userId: "user_" + Math.random().toString(36).slice(2,8),
-    passId: "pass_" + Math.random().toString(36).slice(2,8),
-    btnId: "btn_" + Math.random().toString(36).slice(2,8),
-    order: "normal"
-  },
-  {
-    title: "Welcome Back",
-    userLabel: "Email Address",
-    passLabel: "Your Secret",
-    btnText: "Sign In Now",
-    userId: "email_field_" + Math.random().toString(36).slice(2,8),
-    passId: "secret_" + Math.random().toString(36).slice(2,8),
-    btnId: "submit_" + Math.random().toString(36).slice(2,8),
-    order: "reversed"
-  },
-  {
-    title: "Account Access",
-    userLabel: "Login ID",
-    passLabel: "PIN Code",
-    btnText: "Continue →",
-    userId: "loginId_" + Math.random().toString(36).slice(2,8),
-    passId: "pinCode_" + Math.random().toString(36).slice(2,8),
-    btnId: "goBtn_" + Math.random().toString(36).slice(2,8),
-    order: "normal"
-  },
-  {
-    title: "Member Portal",
-    userLabel: "Your Handle",
-    passLabel: "Passphrase",
-    btnText: "Enter",
-    userId: "handle-" + Date.now(),
-    passId: "phrase-" + Date.now(),
-    btnId: "enter-" + Date.now(),
-    order: "reversed"
-  }
+  { title: "Sign In",        userLabel: "Username",       passLabel: "Password",    btnText: "Login" },
+  { title: "Welcome Back",   userLabel: "Email Address",  passLabel: "Your Secret", btnText: "Sign In Now" },
+  { title: "Account Access", userLabel: "Login ID",       passLabel: "PIN Code",    btnText: "Continue" },
+  { title: "Member Portal",  userLabel: "Your Handle",    passLabel: "Passphrase",  btnText: "Enter" }
 ];
 
+const rand = () => Math.random().toString(36).slice(2, 8);
 const v = variants[Math.floor(Math.random() * variants.length)];
-const userField = `<label>${v.userLabel}</label><input type="text" id="${v.userId}">`;
-const passField = `<label>${v.passLabel}</label><input type="password" id="${v.passId}">`;
-const fields = v.order === "normal" ? userField + passField : passField + userField;
+const uId = "u_" + rand(), pId = "p_" + rand(), bId = "b_" + rand();
 
+// RANDOM: id, visible text, label text, title
+// STABLE: name, type, aria-label, autocomplete, data-testid
 document.getElementById("formContainer").innerHTML = `
   <h2>${v.title}</h2>
-  ${fields}
-  <button id="${v.btnId}" onclick="document.getElementById('result').style.display='block'">${v.btnText}</button>
+
+  <label for="${uId}">${v.userLabel}</label>
+  <input 
+    id="${uId}"
+    name="username"
+    type="text"
+    autocomplete="username"
+    aria-label="Username input field"
+    data-testid="login-username">
+
+  <label for="${pId}">${v.passLabel}</label>
+  <input 
+    id="${pId}"
+    name="password"
+    type="password"
+    autocomplete="current-password"
+    aria-label="Password input field"
+    data-testid="login-password">
+
+  <button 
+    id="${bId}"
+    type="submit"
+    name="login-submit"
+    aria-label="Submit login form"
+    data-testid="login-button"
+    onclick="document.getElementById('result').style.display='block'">
+    ${v.btnText}
+  </button>
+
   <div class="msg" id="result">✓ Login successful!</div>
 `;
 </script>
